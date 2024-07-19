@@ -1,0 +1,96 @@
+#importing modules
+import pygame, sys
+from pygame.locals import QUIT
+from pygame import transform
+import random
+
+lives = 3 
+
+#defining image co-ordinates
+heartX = 370
+heartY = 5
+shipX = 180
+shipY = 250
+laserY = 250
+
+#loading images onto the system
+alien = pygame.image.load('alien.png')
+heart = pygame.image.load('heart.png')
+ship = pygame.image.load('ship.png')
+laser = pygame.image.load('redpixel.png')
+gameOver = pygame.image.load('dead.png')
+
+#scaling the image and storing it in a variable for use
+heart = pygame.transform.scale(heart, (20, 20))
+laser = pygame.transform.scale(laser, (5, 5))
+
+
+#creating a function to draw the image
+def heartLoad(x, y):
+    screen.blit(heart, (x, y))
+
+
+def shipLoad(x, y):
+    screen.blit(ship, (x, y))
+
+
+def laserLoad(x, y):
+    screen.blit(laser, (x, y))
+
+
+#initialising pygame and the screen configuration
+pygame.init()
+screen = pygame.display.set_mode((400, 300))
+
+pygame.display.set_caption('alien shooters')
+pygame.display.set_icon(alien)
+
+#creating game loop
+while True:
+    #changing the colour of the screen
+    screen.fill((2, 0, 255))
+    #allowing a quit function
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            pygame.quit()
+            sys.exit()
+        #allowing movement of the ship depending on keys pressed
+        if event.type == pygame.KEYDOWN:
+            print("key pressed")
+            if event.key == pygame.K_RIGHT:
+                print("right key pressed")
+                shipX += 10
+            elif event.key == pygame.K_LEFT:
+                print("left key pressed")
+                shipX -= 10
+
+    shipLoad(shipX, shipY)
+
+    #defining the position of the laser in relation to the ship
+    laserOneX = shipX + 1
+    laserTwoX = shipX + ship.get_width() - 7
+    
+    #loading images onto the screen
+    heartLoad(heartX, heartY)
+    heartLoad(heartX - 25, heartY)
+    heartLoad(heartX - 50, heartY)
+    
+ 
+    laserY -= 0.3
+    if laserY < 50:
+        laserY = 250
+    laserLoad(laserOneX, laserY)
+    laserLoad(laserTwoX, laserY)
+        
+    
+        
+
+    #updating the display with any changes
+    pygame.display.update()
+
+    #pygame.time.wait(2000)
+    #lives = 0
+    #if lives == 0:
+        #screen.blit(gameOver,(190, 140))
+        #pygame.time.wait(3000)
+    
