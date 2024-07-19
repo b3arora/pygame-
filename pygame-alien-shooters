@@ -1,0 +1,75 @@
+import pygame, sys
+from pygame.locals import QUIT
+from pygame import transform
+import time 
+
+lives = 3
+#defining image co-ordinates
+heartX = 370
+heartY = 5
+shipX = 168
+shipY = 250
+
+#loading images onto the system
+alien = pygame.image.load('alien.png')
+heart = pygame.image.load('heart.png')
+ship = pygame.image.load('ship.png')
+laser = pygame.image.load('redpixel.png')
+gameOver = pygame.image.load('dead.png')
+
+#defining the position of the laser in relation to the ship
+laserOneX = shipX + 2
+laserTwoX = shipX + ship.get_width() - 8
+newLaserY = 250
+laserY = 250
+
+#scaling the image and storing it in a variable for use
+heart = pygame.transform.scale(heart, (20, 20))
+laser = pygame.transform.scale(laser, (5, 5))
+
+
+#creating a function to draw the image
+def heartLoad(x, y):
+    screen.blit(heart, (x, y))
+
+
+def shipLoad(x, y):
+    screen.blit(ship, (x, y))
+
+
+def laserLoad(x, y):
+    screen.blit(laser, (x, y))
+
+
+#initialising pygame and the screen configuration
+pygame.init()
+screen = pygame.display.set_mode((400, 300))
+
+pygame.display.set_caption('alien shooters')
+pygame.display.set_icon(alien)
+while True:
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            pygame.quit()
+            sys.exit()
+
+    #changing the colour of the screen
+    screen.fill((2, 0, 255))
+    
+    #loading images onto the screen
+    heartLoad(heartX, heartY)
+    heartLoad(heartX - 25, heartY)
+    heartLoad(heartX - 50, heartY)
+    shipLoad(shipX, shipY)
+    #pygame.time.wait(2000)
+    laserLoad(laserOneX, laserY)
+    laserLoad(laserTwoX, laserY)
+    laserY -= 0.1
+    
+        
+
+    #updating the display with any changes
+    pygame.display.update()
+
+    #if lives == 0:
+        #screen.blit(gameOver,(190, 140))
