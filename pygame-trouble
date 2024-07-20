@@ -1,0 +1,127 @@
+#importing modules
+import pygame, sys
+from pygame.locals import QUIT
+from pygame import transform
+import random
+
+lives = 3 
+
+#defining image co-ordinates (+ other stuff)
+heartX = 370
+heartY = 5
+shipX = 180
+shipY = 250
+shipChange = 0
+laserY = 250
+laserStatus = "ready"
+alienY = 0
+alienX = 0
+gameOver = False
+
+#loading images onto the system
+alien = pygame.image.load('alien.png')
+alien2 = pygame.image.load('alien2.png')
+heart = pygame.image.load('heart.png')
+ship = pygame.image.load('ship2.png')
+laser = pygame.image.load('redpixel.png')
+gameOverImg = pygame.image.load('dead.png')
+
+#scaling the image and storing it in a variable for use
+heart = pygame.transform.scale(heart, (20, 20))
+laser = pygame.transform.scale(laser, (5, 5))
+alien2 = pygame.transform.scale(alien2, (20, 20))
+
+#creating a function to draw the image
+def heartLoad(x, y):
+    screen.blit(heart, (x, y))
+
+
+def shipLoad(x, y):
+    screen.blit(ship, (x, y))
+
+
+def laserLoad(x, y):
+    laserStatus = "fired"
+    screen.blit(laser, (x, y))
+
+def alienLoad(x, y):
+    screen.blit(alien2, (x, y))
+
+
+#initialising pygame and the screen configuration
+pygame.init()
+screen = pygame.display.set_mode((400, 300))
+
+pygame.display.set_caption('alien shooters')
+pygame.display.set_icon(alien)
+
+#creating game loop
+while True:
+    #defining the position of the laser in relation to the ship
+    laserOneX = shipX + 1
+    laserTwoX = shipX + ship.get_width() - 7
+    #changing the colour of the screen
+    screen.fill((2, 0, 255))
+    #allowing a quit function
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            pygame.quit()
+            sys.exit()
+        #allowing movement of the ship depending on keys pressed
+        if event.type == pygame.KEYDOWN:
+            print("key pressed")
+            if event.key == pygame.K_RIGHT:
+                print("right key pressed")
+                shipChange += 0.1
+            elif event.key == pygame.K_LEFT:
+                print("left key pressed")
+                shipChange -= 0.1
+            #laser controls, making it appear upon pressing the space bar and refresh
+            elif event.key == pygame.K_SPACE:
+                laserLoad(laserOneX, laserY)
+                laserLoad(laserTwoX, laserY)
+                if laserStatus == "fired":
+                    laserY -= 0.5
+                if laserY < 50:
+                    laserY = 250
+                    laserStatus = "ready"
+        if event.type == pygame.KEYUP:
+            print("key released")
+            if event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT:
+                shipChange = 0
+    if shipX < 0:
+        shipX = 0
+    elif shipX > 368:
+        shipX = 368
+    shipX += shipChange
+    shipLoad(shipX, shipY)
+    
+    #loading images onto the screen
+    heartLoad(heartX, heartY)
+    heartLoad(heartX - 25, heartY)
+    heartLoad(heartX - 50, heartY)
+
+    #adding aliens to attack (only one currently)
+    aliens = []
+    index = -1
+    while gameOver == False:
+        alienX = random.randint(30, 370)
+        aliens.append(alienX)
+        index += 1
+        while alienY != 300:
+            alienY += 0.2
+            alienLoad(aliens[index], alienY)
+        if alienY == 300:
+            alienY = 0
+    if len(aliens) == 15:
+        gameOver = True
+        
+    #updating the display with any changes
+    pygame.display.update()
+
+    #pygame.time.wait(2000)
+    #lives = 0
+    #if lives == 0:
+        #screen.blit(gameOverImg,(190, 140))
+        #pygame.time.wait(3000)
+    
